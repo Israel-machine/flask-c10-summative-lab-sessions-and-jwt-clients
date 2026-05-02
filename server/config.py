@@ -7,8 +7,8 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__) #creates main application object
-app.config['SQALCHEMY_DATABASE_URI'] = 'sqlite://counselor.db'
-app.config['SQALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///counselor.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'default-dev-key')
 
 db = SQLAlchemy()
