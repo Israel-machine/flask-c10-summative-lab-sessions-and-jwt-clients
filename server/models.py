@@ -33,3 +33,12 @@ class User(db.Model):
     
     
 class Meeting(db.Model):
+    __tablename__ = 'meetings'
+
+    id = db.Column(db.Integer, primary_key=True)
+    student_name = db.Column(db.String, nullable=False) 
+    meeting_date = db.Column(db.String, nullable=False) 
+    notes = db.Column(db.Text)                          
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    user = db.relationship('User', back_populates='meetings')
