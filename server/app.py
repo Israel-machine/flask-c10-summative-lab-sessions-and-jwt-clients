@@ -16,7 +16,7 @@ class Signup(Resource):
             db.session.add(user)
             db.session.commit()
             
-            token = create_access_token(identity=user.id)
+            token = create_access_token(identity=str(user.id))
             return {"token": token, "user": {"id": user.id, "username": user.username}}, 201
         except Exception as e:
             return {"errors": [str(e)]}, 422
@@ -26,7 +26,7 @@ class Login(Resource):
         data = request.get_json()
         user = User.query.filter_by(username=data.get('username')).first()
         if user and user.authenticate(data.get('password')):
-            token = create_access_token(identity=user.id)
+            token = create_access_token(identity=str(user.id))
             return {"token": token, "user": {"id": user.id, "username": user.username}}, 200
         return {"errors": ["Invalid username or password"]}, 401
 
@@ -41,20 +41,59 @@ class MeetingsResource(Resource):
     @jwt_required()
     def get(self):
         user_id = get_jwt_identity()
-        page = request.args.get('page', 1, type=int)
-        per_page = 5
-        pagination = Meeting.query.filter_by(user_id=user_id).paginate(page=page, per_page=per_page)
+        meetings = Meeting.query.filter_by(user_id=user_id).all()
+        return [m.to_dict() for m in meetings], 200
+
+    @jwt_required()
+    def post(self):
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        try:
+            new_meeting = Meeting(
+                student_name=data['student_name'],
+                meeting_date=data['meeting_date'],
+                notes=data['notes'],
+                user_id=user_id
+            )
+            db.session.add(new_meeting)
+            db.session.commit()
+            return new_meeting.to_dict(), 201
+        except Exception as e:
+            return {"errors": [str(e)]}, 422
+
+class MeetingByID(Resource):
+    @jwt_required()
+    def patch(self, id):
+        user_id = get_jwt_identity()
+        meeting = Meeting.query.filter_by(id=id, user_id=user_id).first()
+        if not meeting:
+            return {"error": "Meeting not found"}, 404
         
-        return {
-            "meetings": [m.to_dict() for m in pagination.items],
-            "total": pagination.total,
-            "pages": pagination.pages
-        }, 200
+        data = request.get_json()
+        for attr in data:
+            setattr(meeting, attr, data[attr])
+        
+        db.session.commit()
+        return meeting.to_dict(), 200
+
+    @jwt_required()
+    def delete(self, id):
+        user_id = get_jwt_identity()
+        meeting = Meeting.query.filter_by(id=id, user_id=user_id).first()
+        if not meeting:
+            return {"error": "Meeting not found"}, 404
+        
+        db.session.delete(meeting)
+        db.session.commit()
+        return {}, 204
+
 
 api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
 api.add_resource(CheckSession, '/me')
+
 api.add_resource(MeetingsResource, '/meetings')
+api.add_resource(MeetingByID, '/meetings/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

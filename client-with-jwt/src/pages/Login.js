@@ -9,7 +9,7 @@ function Login({ onLogin }) {
 
   return (
     <Wrapper>
-      <Logo>My App</Logo>
+      <Logo>Estudioso</Logo>
       {showLogin ? (
         <>
           <LoginForm onLogin={onLogin} />

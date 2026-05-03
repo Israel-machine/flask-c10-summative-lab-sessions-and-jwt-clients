@@ -12,7 +12,7 @@ function NavBar({ setUser }) {
   return (
     <Wrapper>
       <Logo>
-        <Link to="/">My App</Link>
+        <Link to="/">Estudioso</Link>
       </Logo>
       <Nav>
         <Button>

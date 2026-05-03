@@ -1,12 +1,12 @@
-import os #access environment variables (like secret keys or database URLs) for security.
-from flask import Flask #initializes web application instance,
+import os 
+from flask import Flask 
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-app = Flask(__name__) #creates main application object
+app = Flask(__name__) 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///counselor.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'default-dev-key')

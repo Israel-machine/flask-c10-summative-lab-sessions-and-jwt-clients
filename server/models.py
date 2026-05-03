@@ -39,3 +39,12 @@ class Meeting(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     user = db.relationship('User', back_populates='meetings')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "student_name": self.student_name,
+            "meeting_date": self.meeting_date,
+            "notes": self.notes,
+            "user_id": self.user_id
+        }
