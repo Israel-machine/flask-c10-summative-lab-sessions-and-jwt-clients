@@ -1,44 +1,46 @@
-pipenv install
-pipenv shell
-cd server
-export FLASK_APP=app.py
-flask shell
+ESTUDIOSO: High School Counselor Meeting Tracker App
 
-#WHAT DOES THIS DO?#
-flask db init
-flask db migrate
-flask db upgrade
+DESCRIPTION:
+    This project demonstrates a robust implementation of Client-Side and Server-Side Authentication.
 
-#Start Flask Server#:
-flask run --port=5555
-http://127.0.0.1:5555
+    Backend: Built with Python and Flask-RESTful, utilizing SQLAlchemy for database management and Flask-JWT-Extended for security.
 
-#react initializatio#: 
-cd client-with-jwt
-npm install
-npm start
+    Frontend: Built with React, featuring styled-components for UI and a custom JWT-handling system to maintain user sessions.
 
-#RUN SEED FILE TO CREATE DUMMY DATA#
-Enter the Shell
-    flask shell
+    Key Features: User signup/login, persistent sessions, and full CRUD (Create, Read, Update, Delete) capabilities for meeting notes.
 
+INSTALLATION
+    Required:
+        Python 3.8+
+        Node.js & npm
+        Pipenv
 
-from models import User
-from config import db
+    Set Up Back End:
+        cd server
+        pipenv install && pipenv shell
 
-# Create the user object
-u = User(username="ExampleUser")
-u.password_hash = "mypassword"
+    Initialize the database and seed it:
+        flask db upgrade
+        python seed.py
 
-db.session.add(u)
-db.session.commit()
+    Set Up Front End:
+        cd client-with-jwt
+        npm install
 
+RUN INSTRUCTIONS:
+    Run Back End(Flask):
+        In your backend terminal (server folder):
+            python app.py
+            The backend will be accessible at http://localhost:5555.
 
+    Run Front End(React):
+        In your frontend terminal (client-with-jwt folder):
+            npm start
+            The application will open automatically in your browser at http://localhost:4000
 
-Start Flask Back end:
-cd server:
-pipenv shell:
-python app.py
-
-
-Start the React Frontend
+In React Front End(Browswer):
+    1. You will be able to create an account with a username and password
+    2. Login and Logout with that username and password
+    3. Add meetings with meeting details: student in question, date of meeting, notes for meeting 
+    4. Meetings will be saved and visible to user
+    5. User will be able to delete individual meetings 
